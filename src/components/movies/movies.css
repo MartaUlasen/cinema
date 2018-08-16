@@ -1,0 +1,28 @@
+.list-of-movies {
+	display: flex;
+	flex-wrap: wrap;
+	align-content: space-between;
+	justify-content: space-between;
+	width: 100%;
+}
+
+.movie {
+	display: flex;
+	flex-direction: column;
+	width: 240px;
+	border: solid 1px aquamarine;
+	padding: 8px;
+	margin-bottom: 16px;
+}
+
+
+
+.movie__title {
+	border-bottom: solid 1px aquamarine;
+}
+
+.movie__date,
+.movie__hall {
+	font-size: 12px;
+	margin: 8px 0;
+}

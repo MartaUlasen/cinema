@@ -1,0 +1,10 @@
+.seats__number-of-row {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 80px;
+}
+
+.seats__row {
+	display: flex;
+}

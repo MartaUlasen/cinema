@@ -1,0 +1,21 @@
+.seat {
+	display: flex;
+    justify-content: center;
+    align-items: center;
+	width: 40px;
+	height: 40px;
+	margin: 4px;
+	border: solid 2px transparent;
+	background-color: aquamarine;
+	cursor: pointer;
+}
+
+.seat--selected {
+	background-color: yellow;
+}
+
+.seat--booked {
+	background-color: red;
+	cursor: default;
+}
+
