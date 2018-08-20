@@ -148,7 +148,7 @@ class App extends React.Component {
 	state = {
 		seats: generateSeats(this.props.countOfRows,  this.props.countOfColumns),
 		movies: movies,
-		currentDate: null,
+		currentDate: moment(),
 		page: 'films',
 	}
 
