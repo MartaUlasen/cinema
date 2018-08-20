@@ -1,7 +1,7 @@
 import React from 'react';
+import Movie from '.././movie';
 import './movies.css';
 import moment from 'moment';
-
 
 const isBetween = (dateOfSeans, currentDate) => {
 	const REFERENCE = moment();
@@ -40,17 +40,29 @@ class Movies extends React.Component {
 		}
 
 		if (movies.length) {
-			template = movies.map((item, index) => {
+			template = movies.map((item) => {
+				const filteredSessions = item.sessions.filter(session => isBetween(
+					session.date, this.props.currentDate)).map(session => { 
+						return {date: session.date, hall: session.hall} })
+			
+				const itemWithFilteredSessions = {
+					name: item.name,
+					description: item.description,
+					sessions: filteredSessions,
+				}
 				return (
-					<div className="movie" key={index}>
-						<h4 className="movie__title">{item.name}</h4>
-						<div className="movie__description">{item.description}</div>
-					</div>
+					<Movie
+						key={item.name}
+						data={itemWithFilteredSessions}
+					/>
 				)
+			
 			})
-		} 
-		return template;
+			return template;
+		}
+			
 	}
+	
 	render() {
 		
 		return (

@@ -2,7 +2,6 @@ import React from 'react';
 import Hall from '.././hall';
 import Cart from '.././cart';
 import Movies from '.././movies';
-import Movie from '.././movie';
 
 import Datetime from 'react-datetime';
 import moment from 'moment';
@@ -152,51 +151,6 @@ class App extends React.Component {
 		page: 'films',
 	}
 
-	switchPage = () => { 
-		switch (this.state.page) {
-			case 'films': 
-				const yesterday = Datetime.moment().subtract( 1, 'day' );
-				const valid = function( current ){
-					return current.isAfter( yesterday );
-				};
-				return (
-					<React.Fragment>	
-						<Datetime 
-							dateFormat="DD-MM-YYYY" 
-							timeFormat={false}
-							isValidDate={ valid }
-							onChange={this.inputHandler}
-						/>
-						<Movies 
-							movies={this.state.movies}
-							currentDate={this.state.currentDate}
-						/>
-					</React.Fragment>
-				);
-			case 'film': 
-				return <Movie />;
-			case 'hall': 
-				return (
-					<React.Fragment>
-						<Hall
-							seats={this.state.seats}
-							toggleSeatStatus={this.toggleSeatStatus}
-							rows={this.props.countOfRows}
-							cols={this.props.countOfColumns} />
-						<Cart 
-							calculateNumbersOfSelectedSeat={this.calculateNumbersOfSelectedSeat}
-							ticketPrice={this.props.ticketPrice}
-							bookSelectedSeats={this.bookSelectedSeats}
-							resetSelectedSeats={this.resetSelectedSeats}
-						/>
-					</React.Fragment>
-				);
-			default: 
-				return <p>Page not found</p>
-		}
-	}
-	
-
 	inputHandler = (date) => {
 		const newCurrentDay = date;
 		const newState = this.state;
@@ -212,6 +166,12 @@ class App extends React.Component {
 		} else newState.seats[n].status = SEAT_STATES.free;
 		
 		this.setState({ seats: newState.seats });
+	}
+
+	switchPage = (newPage) => {
+		const newState = this.state;
+		newState.page = newPage;
+		this.setState({ page: newState.page });
 	}
 
 	calculateNumbersOfSelectedSeat = () => {
@@ -258,11 +218,55 @@ class App extends React.Component {
 			this.setState({ seats: newState.seats });
 		}
 	}
+	
+	renderPage = () => { 
+		switch (this.state.page) {
+			case 'films': 
+				const yesterday = Datetime.moment().subtract( 1, 'day' );
+				const valid = function( current ){
+					return current.isAfter( yesterday );
+				};
+				return (
+					<div>	
+						<Datetime 
+							dateFormat="DD-MM-YYYY" 
+							timeFormat={false}
+							isValidDate={ valid }
+							onChange={this.inputHandler}
+						/>
+						<Movies 
+							movies={this.state.movies}
+							currentDate={this.state.currentDate}
+							switchPage={this.switchPage}
+						/>
+					</div>
+				);
+			case 'hall': 
+				return (
+					<React.Fragment>
+						<Hall
+							seats={this.state.seats}
+							toggleSeatStatus={this.toggleSeatStatus}
+							rows={this.props.countOfRows}
+							cols={this.props.countOfColumns} />
+						<Cart 
+							calculateNumbersOfSelectedSeat={this.calculateNumbersOfSelectedSeat}
+							ticketPrice={this.props.ticketPrice}
+							bookSelectedSeats={this.bookSelectedSeats}
+							resetSelectedSeats={this.resetSelectedSeats}
+						/>
+					</React.Fragment>
+				);
+			default: 
+				return <p>Page not found</p>
+		}
+	}
 
 	render() {
+		console.log(this.state.page)
 		return (
 			<div className="app">
-				{this.switchPage()}
+				{this.renderPage()}
 			</div>
 		);
 	}
