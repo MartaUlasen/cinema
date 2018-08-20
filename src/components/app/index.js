@@ -2,6 +2,8 @@ import React from 'react';
 import Hall from '.././hall';
 import Cart from '.././cart';
 import Movies from '.././movies';
+import Movie from '.././movie';
+
 import Datetime from 'react-datetime';
 import moment from 'moment';
 import '../../../node_modules/react-datetime/css/react-datetime.css';
@@ -147,14 +149,59 @@ class App extends React.Component {
 		seats: generateSeats(this.props.countOfRows,  this.props.countOfColumns),
 		movies: movies,
 		currentDate: null,
+		page: 'films',
 	}
+
+	switchPage = () => { 
+		switch (this.state.page) {
+			case 'films': 
+				const yesterday = Datetime.moment().subtract( 1, 'day' );
+				const valid = function( current ){
+					return current.isAfter( yesterday );
+				};
+				return (
+					<React.Fragment>	
+						<Datetime 
+							dateFormat="DD-MM-YYYY" 
+							timeFormat={false}
+							isValidDate={ valid }
+							onChange={this.inputHandler}
+						/>
+						<Movies 
+							movies={this.state.movies}
+							currentDate={this.state.currentDate}
+						/>
+					</React.Fragment>
+				);
+			case 'film': 
+				return <Movie />;
+			case 'hall': 
+				return (
+					<React.Fragment>
+						<Hall
+							seats={this.state.seats}
+							toggleSeatStatus={this.toggleSeatStatus}
+							rows={this.props.countOfRows}
+							cols={this.props.countOfColumns} />
+						<Cart 
+							calculateNumbersOfSelectedSeat={this.calculateNumbersOfSelectedSeat}
+							ticketPrice={this.props.ticketPrice}
+							bookSelectedSeats={this.bookSelectedSeats}
+							resetSelectedSeats={this.resetSelectedSeats}
+						/>
+					</React.Fragment>
+				);
+			default: 
+				return <p>Page not found</p>
+		}
+	}
+	
 
 	inputHandler = (date) => {
 		const newCurrentDay = date;
 		const newState = this.state;
 		newState.currentDate = newCurrentDay;
 		this.setState({ currentDate: newState.currentDate });
-		console.log(this.state.currentDate)
 	}
 	
 	toggleSeatStatus = (n) => {
@@ -213,36 +260,9 @@ class App extends React.Component {
 	}
 
 	render() {
-		const yesterday = Datetime.moment().subtract( 1, 'day' );
-		const valid = function( current ){
-			return current.isAfter( yesterday );
-		};
 		return (
 			<div className="app">
-				<div>
-					<Datetime 
-						dateFormat="DD-MM-YYYY" 
-						timeFormat={false}
-						isValidDate={ valid }
-						onChange={this.inputHandler}
-					/>
-					<Movies 
-						movies={this.state.movies}
-						currentDate={this.state.currentDate}
-					/>
-				</div>
-				
-				{/* <Hall
-					seats={this.state.seats}
-					toggleSeatStatus={this.toggleSeatStatus}
-					rows={this.props.countOfRows}
-					cols={this.props.countOfColumns} />
-				<Cart 
-					calculateNumbersOfSelectedSeat={this.calculateNumbersOfSelectedSeat}
-					ticketPrice={this.props.ticketPrice}
-					bookSelectedSeats={this.bookSelectedSeats}
-					resetSelectedSeats={this.resetSelectedSeats}
-				/> */}
+				{this.switchPage()}
 			</div>
 		);
 	}
