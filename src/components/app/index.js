@@ -6,7 +6,7 @@ import Movies from '.././movies';
 import Datetime from 'react-datetime';
 import moment from 'moment';
 import '../../../node_modules/react-datetime/css/react-datetime.css';
-import { SEAT_STATES } from '../../const';
+import { SEAT_STATES, HALLS_INFO } from '../../const';
 import './app.css';
 
 
@@ -58,26 +58,32 @@ const movies = [
 			{
 				date:  new Date(yy, mm, dd, 10, 55),
 				hall: '1',
+				counOfBookedSeats: '3',
 			},
 			{
 				date:  new Date(yy, mm, dd, 12, 55),
 				hall: '2',
+				counOfBookedSeats: '5',
 			},
 			{
-				date:  new Date(yy, mm, dd + 1, 20, 55),
+				date:  new Date(yy, mm, dd + 1, 10, 55),
 				hall: '1',
+				counOfBookedSeats: '6',
 			},
 			{
-				date:  new Date(yy, mm, dd + 1, 22, 55),
+				date:  new Date(yy, mm, dd + 1, 12, 55),
 				hall: '2',
+				counOfBookedSeats: '4',
 			},
 			{
 				date:  new Date(yy, mm, dd + 2, 20, 55),
 				hall: '1',
+				counOfBookedSeats: '20',
 			},
 			{
 				date:  new Date(yy, mm, dd + 2, 22, 55),
 				hall: '2',
+				counOfBookedSeats: '3',
 			}
 		]
 	},
@@ -88,26 +94,32 @@ const movies = [
 			{
 				date:  new Date(yy, mm, dd, 21, 5),
 				hall: '3',
+				counOfBookedSeats: '10',
 			},
 			{
 				date:  new Date(yy, mm, dd, 22, 0),
 				hall: '4',
+				counOfBookedSeats: '4',
 			},
 			{
 				date:  new Date(yy, mm, dd + 1, 21, 5),
 				hall: '3',
+				counOfBookedSeats: '2',
 			},
 			{
 				date:  new Date(yy, mm, dd + 1, 22, 0),
 				hall: '4',
+				counOfBookedSeats: '9',
 			},
 			{
 				date:  new Date(yy, mm, dd + 2, 21, 5),
 				hall: '3',
+				counOfBookedSeats: '8',
 			},
 			{
 				date:  new Date(yy, mm, dd + 2, 22, 0),
 				hall: '4',
+				counOfBookedSeats: '7',
 			}
 		]
 	},
@@ -118,26 +130,32 @@ const movies = [
 			{
 				date:  new Date(yy, mm, dd, 23, 0),
 				hall: '1',
+				counOfBookedSeats: '8',
 			},
 			{
 				date:  new Date(yy, mm, dd, 21, 0),
 				hall: '2',
+				counOfBookedSeats: '7',
 			},
 			{
 				date:  new Date(yy, mm, dd + 1, 23, 0),
 				hall: '1',
+				counOfBookedSeats: '8',
 			},
 			{
 				date:  new Date(yy, mm, dd + 1, 21, 0),
 				hall: '2',
+				counOfBookedSeats: '12',
 			},
 			{
 				date:  new Date(yy, mm, dd + 2, 23, 0),
 				hall: '1',
+				counOfBookedSeats: '2',
 			},
 			{
 				date:  new Date(yy, mm, dd + 2, 21, 0),
 				hall: '2',
+				counOfBookedSeats: '12',
 			}
 		]
 	}
@@ -263,7 +281,6 @@ class App extends React.Component {
 	}
 
 	render() {
-		console.log(this.state.page)
 		return (
 			<div className="app">
 				{this.renderPage()}
