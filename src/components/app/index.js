@@ -22,29 +22,6 @@ const setRandomBookedSeats = (randomNumbers, seats) => {
 	}
 }
 
-const generateSeats = (countOfRows,  countOfColumns) => {
-	const numberOfSeats = countOfRows * countOfColumns;
-	const seats = [];
-	const randomNumbers = [];
-
-	for (let i = 0; i < numberOfSeats; i++) {
-		const stateOfSeat = {
-			id: i,
-			status: SEAT_STATES.free,
-		};
-		seats.push(stateOfSeat);
-	}
-
-	while (randomNumbers.length < 10 ) {
-		const newRandomNumber = randomInteger(0, numberOfSeats);
-		if (randomNumbers.indexOf(newRandomNumber) === -1) {
-			randomNumbers.push(newRandomNumber);
-		} 
-	}
-	setRandomBookedSeats(randomNumbers, seats);
-	return seats;
-}
-
 const now = new Date();
 const yy = now.getFullYear(), 
 	mm = now.getMonth(), 
@@ -163,10 +140,13 @@ const movies = [
 
 class App extends React.Component {
 	state = {
-		seats: generateSeats(this.props.countOfRows,  this.props.countOfColumns),
 		movies: movies,
 		currentDate: moment(),
 		page: 'films',
+		selectedSession: null,
+		countOfRows: null,
+		countOfColumns: null,
+		seats: null,
 	}
 
 	inputHandler = (date) => {
@@ -186,10 +166,81 @@ class App extends React.Component {
 		this.setState({ seats: newState.seats });
 	}
 
-	switchPage = (newPage) => {
+	switchPage = (currentPage) => {
 		const newState = this.state;
-		newState.page = newPage;
+		newState.page = currentPage;
 		this.setState({ page: newState.page });
+	}
+
+	selectSession = (currentHall) => {
+		const newState = this.state;
+		newState.selectedSession = currentHall;
+		this.setState({ selectedSession: newState.selectedSession });
+		this.changeSeatsState();
+
+	}
+
+	changeCountOfSeats = (rows, cols) => {
+		const newState = this.state;
+		newState.countOfRows = rows;		
+		newState.countOfColumns = cols;
+		this.setState({ 
+			countOfRows: newState.countOfRows,
+			countOfColumns: newState.countOfColumns
+		});
+	}
+
+	changeSeatsState = () => {
+		const newState = this.state;
+		newState.seats = this.generateSeats(this.state.selectedSession,  this.state.movies);
+		this.setState({ seats: newState.seats });
+	}
+
+	generateSeats = (selectedSession, movies) => {
+		let countOfBookedSeats = null;
+		movies.forEach((movie, index) => {
+			if (movie.name === selectedSession.name) {
+				movie.sessions.forEach(session => {
+					if (session.date === selectedSession.date) {
+						countOfBookedSeats = session.counOfBookedSeats;
+					}
+				})
+			}
+		});
+	
+		let indexOfHall = null;
+	
+		HALLS_INFO.forEach((hall, index) =>{
+			if (hall.number === selectedSession.hall) {
+				indexOfHall = index;
+			}
+			return indexOfHall;
+		})
+	
+		const countOfRows = HALLS_INFO[indexOfHall].countOfRows;
+		const countOfColumns = HALLS_INFO[indexOfHall].countOfColumns;
+		const numberOfSeats = countOfRows * countOfColumns;
+		const seats = [];
+		const randomNumbers = [];
+	
+		this.changeCountOfSeats(countOfRows, countOfColumns);
+	
+		for (let i = 0; i < numberOfSeats; i++) {
+			const stateOfSeat = {
+				id: i,
+				status: SEAT_STATES.free,
+			};
+			seats.push(stateOfSeat);
+		}
+	
+		while (randomNumbers.length < countOfBookedSeats ) {
+			const newRandomNumber = randomInteger(0, numberOfSeats);
+			if (randomNumbers.indexOf(newRandomNumber) === -1) {
+				randomNumbers.push(newRandomNumber);
+			}
+		}
+		setRandomBookedSeats(randomNumbers, seats);
+		return seats;
 	}
 
 	calculateNumbersOfSelectedSeat = () => {
@@ -256,23 +307,32 @@ class App extends React.Component {
 							movies={this.state.movies}
 							currentDate={this.state.currentDate}
 							switchPage={this.switchPage}
+							selectSession={this.selectSession}
+							countOfRows={this.state.countOfRows}
+							countOfColumns={this.state.countOfColumns}
 						/>
 					</div>
 				);
 			case 'hall': 
 				return (
 					<React.Fragment>
-						<Hall
-							seats={this.state.seats}
-							toggleSeatStatus={this.toggleSeatStatus}
-							rows={this.props.countOfRows}
-							cols={this.props.countOfColumns} />
-						<Cart 
-							calculateNumbersOfSelectedSeat={this.calculateNumbersOfSelectedSeat}
-							ticketPrice={this.props.ticketPrice}
-							bookSelectedSeats={this.bookSelectedSeats}
-							resetSelectedSeats={this.resetSelectedSeats}
-						/>
+						<div>{this.state.selectedSession.name}</div>
+						<div>Hall {this.state.selectedSession.hall}</div>
+						<div className="hall">
+							<Hall
+								seats={this.state.seats}
+								toggleSeatStatus={this.toggleSeatStatus}
+								rows={this.state.countOfRows}
+								cols={this.state.countOfColumns}
+							/>
+							<Cart 
+								calculateNumbersOfSelectedSeat={this.calculateNumbersOfSelectedSeat}
+								ticketPrice={this.props.ticketPrice}
+								bookSelectedSeats={this.bookSelectedSeats}
+								resetSelectedSeats={this.resetSelectedSeats}
+							/>
+						</div>
+						
 					</React.Fragment>
 				);
 			default: 

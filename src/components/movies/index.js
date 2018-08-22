@@ -29,12 +29,12 @@ class Movies extends React.Component {
 		}
 
 		return filteredMovies;
-
 	}
 
 	renderMovies = () => {
 		let movies = this.props.movies;
 		let template = null;
+		
 		if (this.props.currentDate !== null) {
 			movies = this.filterMovies(this.props.currentDate);
 		}
@@ -54,6 +54,8 @@ class Movies extends React.Component {
 					<Movie
 						key={item.name}
 						data={itemWithFilteredSessions}
+						selectSession={this.props.selectSession}
+						switchPage={this.props.switchPage}
 					/>
 				)
 			
@@ -64,7 +66,6 @@ class Movies extends React.Component {
 	}
 	
 	render() {
-		
 		return (
 			<div className="movies">
 				<h3>{this.props.currentDate !== null ? moment(this.props.currentDate).format('DD MMMM') : 'Now'} at the cinema</h3>

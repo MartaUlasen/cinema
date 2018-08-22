@@ -1,3 +1,7 @@
+.hall {
+	display: flex;
+}
+
 .seats__number-of-row {
 	display: flex;
 	justify-content: center;

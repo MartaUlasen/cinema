@@ -2,12 +2,16 @@ import React from 'react';
 import moment from 'moment';
 
 class Movie extends React.Component {
-	state = {
-		selectedFilm: null,
-	}
-	
-	sheduleHandler = () => {
-		console.log(this.props.data)
+	buttonHandler = (index) => {
+		const selectedSession = {
+			name: this.props.data.name,
+			description: this.props.data.description,
+			date: this.props.data.sessions[index].date,
+			hall: this.props.data.sessions[index].hall
+		}
+		
+		this.props.selectSession(selectedSession);
+		this.props.switchPage('hall');
 	}
 
 	getShedule = (sessions) => {
@@ -16,9 +20,7 @@ class Movie extends React.Component {
 				<button className="button" 
 					type="button" 
 					key={index}
-					onClick={()=>{
-						this.sheduleHandler();
-					}}>
+					onClick={()=>{this.buttonHandler(index)}}>
 					{moment(session.date).format('LT')}
 				</button>)
 			
