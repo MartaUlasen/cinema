@@ -10,12 +10,12 @@
 	display: flex;
 	flex-direction: column;
 	width: 240px;
-	border: solid 1px aquamarine;
 	padding: 8px;
 	margin-bottom: 16px;
+	margin-right: 16px;
+	background-color: #fff;
+	box-shadow: 1px 0 13px 0 rgba(0,0,0,.08);
 }
-
-
 
 .movie__title {
 	border-bottom: solid 1px aquamarine;

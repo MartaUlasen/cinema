@@ -296,7 +296,8 @@ class App extends React.Component {
 					return current.isAfter( yesterday );
 				};
 				return (
-					<div>	
+					<div>
+						<span>Select date</span>	
 						<Datetime 
 							dateFormat="DD-MM-YYYY" 
 							timeFormat={false}
